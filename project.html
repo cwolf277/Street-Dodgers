@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Exercise 3</title>
+
+    <style>
+        div {
+            margin-top: 50px;
+        }
+
+        #myCanvas {
+            background-image: url("bg.png");
+        }
+    </style>
+
+</head>
+
+<body onkeydown="start(event)"></body>
+
+
+
+
+
+
+<div style="text-align:center;">
+
+    <h1>Welcome to Street dodgers</h1>
+
+
+    <input id="button" type="submit" name="button" value="hard" />
+    <input id="button1" type="submit" name="button1" value="medium" />
+    <input id="button2" type="submit" name="button2" value="easy" />
+
+    <br><br>
+
+    <p>choose your character: </p>
+    <p>
+        <input id="Will" type="submit" name="Will" value="Runner" />
+        <input id="Motor" type="submit" name="Motor" value="Motorcycle" />
+        <input id="secret" type="submit" name="secret" value="Secret" />
+        <br><br>
+
+    <p>Street dogders, dodge incoming trafic. controls: up: W, down: S, left: A, right: D </p>
+    <p>
+
+
+    </p>
+    <h3 id="div2">
+        Time high score will display here:
+    </h3>
+    <canvas id="myCanvas" width="400" height="500" style="border:3px solid black;"></canvas>
+
+
+
+
+    <br>
+    <button onClick="start(event)"> Play!</button>
+    <br>
+    <br>
+
+
+
+
+
+</div>
+
+
+
+
+
+</div>
+
+<script>
+
+    let canvas = document.getElementById("myCanvas"),
+        ctx = canvas.getContext("2d");
+    let carLen = 50;
+    let motoLen = 50;
+    let maxLength = 500;
+    let time = 0;
+    let count = 0;
+    let collison = false;
+    let timer;
+    let medium = 3000;
+    let hard = 1000;
+    let easy = 4000;
+    let g;
+    let ch;
+
+    document.getElementById('Will').onclick = function () {
+        ch = "will";
+
+    }
+
+    document.getElementById('Motor').onclick = function () {
+
+
+        ch = "motor";
+    }
+
+    document.getElementById('secret').onclick = function () {
+
+
+        ch = "secret";
+    }
+
+
+
+    document.getElementById('button').onclick = function () {
+        g = hard;
+
+    }
+    document.getElementById('button1').onclick = function () {
+
+
+        g = medium;
+    }
+    document.getElementById('button2').onclick = function () {
+
+
+        g = easy;
+    }
+
+
+
+    let motoX = 175;
+    let motoY = 400;
+
+
+    function will() {
+        let runner = new Image();
+        runner.src = "man.png";
+        runner.onload = function () {
+            ctx.drawImage(runner, motoX, motoY, 50, 50);
+        }
+
+
+    }
+
+    function secret() {
+        let runner = new Image();
+        runner.src = "dababy.png";
+        runner.onload = function () {
+            ctx.drawImage(runner, motoX, motoY, 50, 50);
+        }
+
+    }
+    function motorcycle() {
+        //motercycle
+
+
+        let runner = new Image();
+        runner.src = "moto.png";
+        runner.onload = function () {
+            ctx.drawImage(runner, motoX, motoY, 50, 50);
+        }
+    }
+
+    function treeOne(x, y) {
+
+        //light
+        let tree = new Image();
+        tree.src = "light.jpg";
+        tree.onload = function () {
+            ctx.drawImage(tree, x, y, 50, 50);
+        }
+
+    }
+    function trees(x, y) {
+
+        //light
+        let tree = new Image();
+        tree.src = "tree.png";
+        tree.onload = function () {
+            ctx.drawImage(tree, x, y, 50, 50);
+        }
+
+    }
+
+    function carOne(x, y) {
+        let runner = new Image();
+        runner.src = "car.png";
+        runner.onload = function () {
+            ctx.drawImage(runner, x, y, 50, 50);
+        }
+    }
+
+    function street() {
+
+
+
+
+
+
+    }
+
+    function grass() {
+        //grass
+
+
+    }
+
+    function start(e) {
+        if (ch == undefined) {
+            alert("please select character");
+        }
+        else {
+
+        }
+
+
+        if (g == undefined) {
+            alert("please select a dificulty");
+        }
+        else {
+
+
+            if (count == 0) {
+                let timer = setInterval(myTimer, 1000);
+                count++;
+                carGen(1);
+                
+                if (ch == "motor") {
+                            motorcycle();
+                        }
+
+                        else if (ch == "will") {
+
+
+                            will();
+
+                        }
+                        else if (ch == "secret") {
+                            secret();
+                        }
+            }
+
+
+
+
+
+            // function keyCodes(e){
+            if (collison == false) {
+
+                let key_Code = e.which || e.keyCode;
+                switch (key_Code) {
+                    case 68:  //d
+
+
+                        if (motoX < 315) {
+                            ctx.save();
+                            ctx.clearRect(motoX, motoY, canvas.width, canvas.height);
+                            ctx.restore();
+
+                            motoX += 70;
+                            motoY += 0;
+
+                        }
+                        if (ch == "motor") {
+                            motorcycle();
+                        }
+
+                        else if (ch == "will") {
+
+
+                            will();
+
+                        }
+                        else if (ch == "secret") {
+                            secret();
+                        }
+                        break;
+
+                    case 65: //a
+
+
+                        if (motoX > 35) {
+                            ctx.save();
+                            ctx.clearRect(motoX, motoY, canvas.width, canvas.height);
+                            ctx.restore();
+                            motoX -= 70;
+                            motoY += 0;
+
+                            if (ch == "motor") {
+                                motorcycle();
+                            }
+
+                            else if (ch == "will") {
+
+
+                                will();
+
+                            }
+                            else if (ch == "secret") {
+                                secret();
+                            }
+                        }
+
+
+                        break;
+
+                    case 83: //s
+                        if (motoY != 400) {
+
+                            ctx.save();
+                            ctx.clearRect(motoX, motoY, canvas.width, canvas.height);
+                            ctx.restore();
+                            //ctx.translate(10, 0);
+                            motoX += 0;
+                            motoY += 100;
+                            if (ch == "motor") {
+                                motorcycle();
+                            }
+
+                            else if (ch == "will") {
+
+
+                                will();
+
+                            }
+                            else if (ch == "secret") {
+                                secret();
+                            }
+                        }
+                        break;
+
+                    case 87: //w
+                        if (motoY != 0) {
+
+                            ctx.save();
+                            ctx.clearRect(motoX, motoY, canvas.width, canvas.height);
+                            ctx.restore();
+                            //ctx.translate(10, 0);
+                            motoX += 0;
+                            motoY -= 100;
+                            if (ch == "motor") {
+                                motorcycle();
+                            }
+
+                            else if (ch == "will") {
+
+
+                                will();
+
+                            }
+                            else if (ch == "secret") {
+                                secret();
+                            }
+                        }
+                        break;
+
+
+                }
+
+            }
+        }
+
+    }
+
+
+    function carGen(interval) {
+
+        let time = 3;
+        timer = setInterval(function () {
+            let ran = Math.random();
+            if (ran <= 0.2) {
+                carOne(175, 0);
+                carMove(175, 0);
+            }
+            else if (ran <= 0.4) {
+                carOne(245, 0);
+                carMove(245, 0);
+            }
+            else if (ran <= 0.6) {
+                carOne(315, 0);
+                carMove(315, 0);
+            }
+            else if (ran <= 0.8) {
+                carOne(105, 0);
+                carMove(105, 0);
+            }
+            else {
+                carOne(35, 0);
+                carMove(35, 0);
+            }
+
+
+        }, g);
+    }
+
+    function carMove(x, y) {
+        let time = 2;
+        let tim = setInterval(function () {
+
+
+
+
+            if (y < maxLength) {
+                ctx.clearRect(x, y, carLen, carLen);
+                y += 100;
+                carOne(x, y);
+
+
+                if (motoX == x && motoY == y) {
+
+                    clearInterval(tim);
+                    collison = true;
+
+
+
+                }
+            }
+            ctx.clearRect(x, y, carLen, carLen);
+        }, 1600);
+    }
+
+    function myTimer() {
+
+        if (collison == false) {
+
+
+            time = (time + 1);
+            div2.innerHTML = "Time Score: " + time;
+
+        }
+        if (collison == true) {
+
+
+            clearInterval(timer);
+
+
+            //ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            div2.innerHTML = "Game Over! your time was: " + time + " sec";
+            time = time;
+        }
+
+        else {
+
+        }
+
+    }
+
+
+
+    street();
+    if (ch == "motor") {
+        motorcycle();
+    }
+
+    else if (ch == "will") {
+
+
+        will();
+
+    }
+    else if (ch == "secret") {
+        secret();
+    }
+
+    treeOne(0, 0);
+    treeOne(0, 390);
+
+    trees(0, 250);
+
+
+
+</script>
+
+
+
+
+
+
+
+</body>
+
+</html>
