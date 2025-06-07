@@ -1,0 +1,173 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Street Dodgers</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 0;
+    }
+
+    #game-container {
+      max-width: 480px;
+      margin: 40px auto;
+      padding: 25px;
+      background-color: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    h1 {
+      color: #2c3e50;
+      margin-bottom: 10px;
+    }
+
+    h3 {
+      font-weight: normal;
+      font-size: 16px;
+      color: #34495e;
+    }
+
+    p {
+      font-size: 14px;
+      color: #555;
+    }
+
+    canvas {
+      margin-top: 20px;
+      border: 2px solid #444;
+      border-radius: 6px;
+      background-color: #000;
+    }
+
+    button, input[type="submit"] {
+      margin: 6px;
+      padding: 10px 18px;
+      font-size: 14px;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover, input[type="submit"]:hover {
+      background-color: #1c5980;
+    }
+  </style>
+</head>
+<body onkeydown="start(event)">
+  <div id="game-container">
+    <h1>Street Dodgers</h1>
+    <h3 id="scoreText">Time high score will display here</h3>
+
+    <input id="button" type="submit" value="Hard" />
+    <input id="button1" type="submit" value="Medium" />
+    <input id="button2" type="submit" value="Easy" />
+
+    <p>Use W/A/S/D keys to move. Avoid the cars!</p>
+
+    <canvas id="myCanvas" width="400" height="500"></canvas>
+
+    <button onClick="start(event)">Play!</button>
+  </div>
+
+  <script>
+    const canvas = document.getElementById("myCanvas");
+    const ctx = canvas.getContext("2d");
+
+    let carLen = 50, motoLen = 50;
+    let time = 0, count = 0, collison = false, gameInterval;
+    let medium = 3000, hard = 1000, easy = 4000, g;
+
+    let motoX = 175;
+    let motoY = 400;
+    let bgY1 = 0;
+    let bgY2 = -500;
+
+    const bgImg = new Image();
+    bgImg.src = "bg.png";
+
+    const motoImg = new Image();
+    motoImg.src = "moto.png";
+
+    const carImg = new Image();
+    carImg.src = "car.png";
+
+    document.getElementById('button').onclick = () => g = hard;
+    document.getElementById('button1').onclick = () => g = medium;
+    document.getElementById('button2').onclick = () => g = easy;
+
+    let cars = [];
+
+    function start(e){
+      if(g === undefined){
+        alert("please select a difficulty");
+        return;
+      }
+
+      if(count === 0){
+        gameInterval = setInterval(updateGame, 100);
+        setInterval(generateCar, g);
+        setInterval(updateTimer, 1000);
+        count++;
+      }
+
+      if(!collison){
+        let key = e.which || e.keyCode;
+        ctx.clearRect(motoX, motoY, 50, 50);
+        switch(key){
+          case 68: if(motoX < 315) motoX += 70; break;
+          case 65: if(motoX > 35) motoX -= 70; break;
+          case 83: if(motoY < 450) motoY += 10; break;
+          case 87: if(motoY > 0) motoY -= 10; break;
+        }
+      }
+    }
+
+    function generateCar(){
+      const lanes = [35, 105, 175, 245, 315];
+      const randX = lanes[Math.floor(Math.random() * lanes.length)];
+      cars.push({ x: randX, y: 0 });
+    }
+
+    function updateGame(){
+      // Move background
+      bgY1 += 10;
+      bgY2 += 10;
+      if (bgY1 >= 500) bgY1 = -500;
+      if (bgY2 >= 500) bgY2 = -500;
+
+      ctx.drawImage(bgImg, 0, bgY1, canvas.width, canvas.height);
+      ctx.drawImage(bgImg, 0, bgY2, canvas.width, canvas.height);
+
+      // Draw player
+      ctx.drawImage(motoImg, motoX, motoY, 50, 50);
+
+      // Move and draw cars
+      for(let i = 0; i < cars.length; i++){
+        cars[i].y += 10;
+        ctx.drawImage(carImg, cars[i].x, cars[i].y, 50, 50);
+
+        if(Math.abs(cars[i].x - motoX) < 40 && Math.abs(cars[i].y - motoY) < 40){
+          collison = true;
+          clearInterval(gameInterval);
+          document.getElementById("scoreText").innerHTML = "Game Over! Your time was: " + time;
+        }
+      }
+    }
+
+    function updateTimer(){
+      if(!collison){
+        time++;
+        document.getElementById("scoreText").innerHTML = "Time Score: " + time;
+      }
+    }
+  </script>
+</body>
+</html>
